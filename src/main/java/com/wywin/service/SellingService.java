@@ -1,11 +1,14 @@
 package com.wywin.service;
 
+import com.wywin.dto.ItemSearchDTO;
 import com.wywin.dto.SellingItemFormDTO;
 import com.wywin.entity.SellingItem;
 import com.wywin.entity.SellingItemImg;
 import com.wywin.repository.SellingItemImgRepository;
 import com.wywin.repository.SellingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +45,12 @@ public class SellingService{
 
         return sellingItem.getSid();                    // 저장된 상품 ID 반환
     }
+
+    @Transactional(readOnly = true)
+    public Page<SellingItem> getSellingItemPage(ItemSearchDTO itemSearchDto, Pageable pageable){
+        return sellingRepository.getSellingItemPage(itemSearchDto, pageable);
+    } // 페이지 처리되는 아이템 처리용 (상품 조회 조건과 페이지 정보를 파라미터로 받아서 상품 데이터를 조회)
+
 
 
 }
