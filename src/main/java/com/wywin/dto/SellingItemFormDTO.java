@@ -23,8 +23,8 @@ public class SellingItemFormDTO { // 프론트에서 넘어오는 객체 처리�
     @NotNull(message = "가격은 필수 입력 값입니다.")
     private Integer sprice;
 
-    @NotBlank(message = "이름은 필수 입력 값입니다.")
-    private String sitemDetail;
+    @NotBlank(message = "설명은 필수 입력 값입니다.")
+    private String itemDetail;
 
     @NotNull(message = "재고는 필수 입력 값입니다.")
     private Integer stockNumbers;

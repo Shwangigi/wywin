@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    // 추가적인 스크립트가 필요할 경우 여기에 작성
+  </script>
+</th:block>
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+  <style>
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      margin: 10px;
+      display: inline-block;
+      width: calc(20% - 20px); /* 한 줄에 5개 카드 */
+      vertical-align: top;
+      height: 380px; /* 카드 높이 고정 */
+      overflow: hidden; /* 내용이 박스를 넘어가지 않도록 숨김 */
+    }
+    .card img {
+      width: 100%; /* 이미지 너비 조정 */
+      height: 200px; /* 이미지 높이 고정 */
+      object-fit: cover; /* 비율 유지하면서 잘라내기 */
+    }
+    .card-container {
+      display: flex;
+      flex-wrap: wrap; /* 카드들을 여러 줄로 배치 */
+      justify-content: space-between; /* 카드 간격 조정 */
+    }
+    .card-title {
+      font-size: 1.0em;
+      margin: 10px 0;
+    }
+    .card-short-detail {
+      font-size: 0.9em;
+      color: #666;
+      margin: 10px 0;
+    }
+    .card-bid-price {
+      font-weight: bold;
+      color: #007bff;
+    }
+  </style>
+</th:block>
+
+<div layout:fragment="content">
+
+  <h1>경매 리스트</h1>
+
+  <!-- 리스트 출력 방식-->
+  <div class="sort-bar clearfix">
+    <div>
+      <a class="sort-button" th:classappend="${param.sort == 'popular'} ? 'selected' : ''" th:href="@{/auction/items(sort='popular')}">인기상품순</a>
+      <a class="sort-button" th:classappend="${param.sort == 'new'} ? 'selected' : ''" th:href="@{/auction/items(sort='new')}">신상품순</a>
+      <a class="sort-button" th:classappend="${param.sort == 'price_desc'} ? 'selected' : ''" th:href="@{/auction/items(sort='price_desc')}">가격높은순</a>
+      <a class="sort-button" th:classappend="${param.sort == 'price_asc'} ? 'selected' : ''" th:href="@{/auction/items(sort='price_asc')}">가격낮은순</a>
+      <a class="sort-button" th:classappend="${param.sort == 'quick_price_desc'} ? 'selected' : ''" th:href="@{/auction/items(sort='quick_price_desc')}">즉결높은순</a>
+      <a class="sort-button" th:classappend="${param.sort == 'quick_price_asc'} ? 'selected' : ''" th:href="@{/auction/items(sort='quick_price_asc')}">즉결낮은순</a>
+      <a class="sort-button" th:classappend="${param.sort == 'bids_desc'} ? 'selected' : ''" th:href="@{/auction/items(sort='bids_desc')}">입찰많은순</a>
+      <a class="sort-button" th:classappend="${param.sort == 'bids_asc'} ? 'selected' : ''" th:href="@{/auction/items(sort='bids_asc')}">입찰적은순</a>
+      <a class="sort-button" th:classappend="${param.sort == 'end_soon'} ? 'selected' : ''" th:href="@{/auction/items(sort='end_soon')}">종료빠른순</a>
+      <a class="sort-button" th:classappend="${param.sort == 'end_late'} ? 'selected' : ''" th:href="@{/auction/items(sort='end_late')}">종료느린순</a>
+    </div>
+    <div class="view_type">
+      <a href="#list" class="type ListingButton" title="리스트형 보기"><i class="fa fa-list"></i></a>
+      <a href="#gallery" class="type selected ListingButton" title="갤러리형 보기"><i class="fa fa-th-large"></i></a>
+    </div>
+  </div>
+
+  <!-- 리스트 출력 -->
+  <div class="card-container">
+    <div class="card" th:each="item : ${auctionItems.content}">
+      <div>
+        <img th:if="${item.auctionImgs.size() > 0}"
+             th:src="@{${item.auctionImgs.?[repimgYn=='Y'][0].imgUrl}}"
+             alt="대표 이미지" />
+      </div>
+      <div class="card-title" th:text="${item.itemName}"></div>
+      <div class="card-short-detail" th:text="${item.itemShortDetail}"></div>
+      <div class="card-bid-price">시작 금액: <span th:text="${item.bidPrice}"></span>원</div>
+    </div>
+  </div>
+
+  <!-- 페이징 처리 -->
+  <div>
+    <ul class="pagination">
+      <li class="page-item" th:classappend="${auctionItems.hasPrevious()}?'':'disabled'">
+        <a th:href="@{/auction/items(page=${auctionItems.number - 1}, size=${auctionItems.size})}" class="page-link">이전</a>
+      </li>
+
+      <th:block th:each="page : ${#numbers.sequence(0, auctionItems.totalPages - 1)}">
+        <li class="page-item" th:classappend="${auctionItems.number == page}?'active':''">
+          <a th:href="@{/auction/items(page=${page}, size=${auctionItems.size})}" class="page-link" th:text="${page + 1}"></a>
+        </li>
+      </th:block>
+
+      <li class="page-item" th:classappend="${auctionItems.hasNext()}?'':'disabled'">
+        <a th:href="@{/auction/items(page=${auctionItems.number + 1}, size=${auctionItems.size})}" class="page-link">다음</a>
+      </li>
+    </ul>
+  </div>
+
+  <a href="/auction/item/new">새 경매 물품 등록하기</a> <!-- 경매 물품 등록 링크 -->
+
+</div>
+
+</html>

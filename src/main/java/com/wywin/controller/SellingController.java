@@ -54,7 +54,7 @@ public class SellingController {
             // 상품 및 이미지 저장 처리
             sellingService.saveSellingItem(sellingItemFormDTO, itemImgFileList);
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "상품 등록 중 에러가 발생하였습니다.");
+            model.addAttribute("errorMessage", "상품 등록 중 에러가 발생하였습니다."+ e.getMessage());
             return "sellings/sellingNew"; // 수정된 경로
         }
 
