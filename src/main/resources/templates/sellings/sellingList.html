@@ -80,6 +80,8 @@
         <th:block th:each="sellingItem : ${items.content}">
             <div class="col-md-2 col-sm-4 mb-4"> <!-- md-2: 큰 화면에서 5개, sm-4: 중간 화면에서 3개 표시 -->
                 <div class="card">
+                    <a th:href="@{/sellings/{sellingId}(sellingId=${sellingItem.sid})}" class="card-link">
+
                     <div>
                         <img th:if="${sellingItem.sellingImgs.size() > 0}"
                              th:src="${sellingItem.sellingImgs.?[srepimgYn == 'Y'][0].simgUrl}"

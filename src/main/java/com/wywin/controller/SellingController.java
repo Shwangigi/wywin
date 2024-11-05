@@ -77,5 +77,12 @@ public class SellingController {
         // itemMng.html로 리턴함.
     }
 
+    @GetMapping(value = "/sellings/{sellingId}")
+    public String itemDtl(Model model, @PathVariable("sellingId") Long sellingId){
+        SellingItemFormDTO sellingItemFormDTO = sellingService.getItemDtl(sellingId);
+        model.addAttribute("item", sellingItemFormDTO);
+        return "sellings/sellingDtl";
+    }
+
 
 }
