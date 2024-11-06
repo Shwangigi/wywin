@@ -65,7 +65,7 @@ public class SellingController {
     @GetMapping(value = {"/sellings/sellingList", "/sellings/sellingList/{page}"})  //페이징이 없는경우, 있는 경우
     public String itemManage(ItemSearchDTO itemSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
 
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);
+        Pageable pageable = PageRequest.of(page.orElse(0), 20);
         // 페이지 파라미터가 없으면 0번 페이지를 보임. 한 페이지당 3개의 상품만 보여줌.
         Page<SellingItem> items = sellingService.getSellingItemPage(itemSearchDto, pageable);  // 조회 조건, 페이징 정보를 파라미터로 넘겨서 Page 타입으로 받음
         // 조회 조건과 페이징 정보를 파라미터로 넘겨서 item 객체 받음

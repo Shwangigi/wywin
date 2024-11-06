@@ -30,84 +30,112 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
-        select {
+        .top-banner {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .search-section {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .form-inline select, .form-inline input {
             margin-right: 10px;
         }
-        .card-text {
+        .card img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+        }
+        .card-text, .card-title {
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
         }
-        .center {
+        .card-body {
             text-align: center;
         }
-        .card img {
-            width: 100%; /* 카드의 너비에 맞추기 */
-            height: auto; /* 비율을 유지하면서 자동으로 높이 조절 */
-            max-height: 200px; /* 원하는 최대 높이 설정 */
-            object-fit: cover; /* 비율을 유지하면서 잘라내기 */
+        .buy-button {
+            margin-top: 10px;
+            display: inline-block;
+            width: 100%;
         }
     </style>
 </th:block>
 
 <div layout:fragment="content">
-    <a th:href="@{/sellings/new}">판매물품등록</a>
+    <!-- 판매물품등록 버튼 위치 -->
+    <div class="top-banner">
+        여기는 즉각 구매 가능합니다
+    </div>
+    <div class="text-center mb-4">
+        <a th:href="@{/sellings/new}" class="btn btn-primary">판매물품 등록</a>
+    </div>
 
     <form th:action="@{/sellings/sellingList}" method="get" th:object="${itemSearchDto}">
-        <div class="form-inline justify-content-center">
-            <select th:field="*{searchDateType}" class="form-control" style="width:auto;">
-                <option value="all">전체기간</option>
-                <option value="1d">1일</option>
-                <option value="1w">1주</option>
-                <option value="1m">1개월</option>
-                <option value="6m">6개월</option>
-            </select>
-            <select th:field="*{searchSellStatus}" class="form-control" style="width:auto;">
-                <option value="">판매상태(전체)</option>
-                <option value="SELL">판매</option>
-                <option value="SOLD_OUT">품절</option>
-            </select>
-            <select th:field="*{searchBy}" class="form-control" style="width:auto;">
-                <option value="itemNm">상품명</option>
-                <option value="createdBy">등록자</option>
-            </select>
-            <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="검색어를 입력해주세요">
-            <button id="searchBtn" type="button" class="btn btn-primary">검색</button>
+        <div class="search-section text-center">
+            <div class="form-inline justify-content-center">
+                <select th:field="*{searchDateType}" class="form-control">
+                    <option value="all">전체기간</option>
+                    <option value="1d">1일</option>
+                    <option value="1w">1주</option>
+                    <option value="1m">1개월</option>
+                    <option value="6m">6개월</option>
+                </select>
+                <select th:field="*{searchSellStatus}" class="form-control">
+                    <option value="">판매상태(전체)</option>
+                    <option value="SELL">판매</option>
+                    <option value="SOLD_OUT">품절</option>
+                </select>
+                <select th:field="*{searchBy}" class="form-control">
+                    <option value="itemNm">상품명</option>
+                    <option value="createdBy">등록자</option>
+                </select>
+                <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="검색어를 입력해주세요">
+                <button id="searchBtn" type="button" class="btn btn-primary">검색</button>
+            </div>
         </div>
     </form>
 
     <div class="row">
         <th:block th:each="sellingItem : ${items.content}">
-            <div class="col-md-2 col-sm-4 mb-4"> <!-- md-2: 큰 화면에서 5개, sm-4: 중간 화면에서 3개 표시 -->
+            <div class="col-md-3 col-sm-6 mb-4">
                 <div class="card">
                     <a th:href="@{/sellings/{sellingId}(sellingId=${sellingItem.sid})}" class="card-link">
-
-                    <div>
-                        <img th:if="${sellingItem.sellingImgs.size() > 0}"
-                             th:src="${sellingItem.sellingImgs.?[srepimgYn == 'Y'][0].simgUrl}"
-                             alt="대표 이미지" class="img-fluid" />
-                    </div>
-                    <div class="card-body">
-                        <h4 class="card-title" th:text="${sellingItem.sitemNm}"></h4>
-                        <p class="card-text" th:text="${sellingItem.sprice}"></p>
-                    </div>
+                        <div>
+                            <img th:if="${sellingItem.sellingImgs.size() > 0}"
+                                 th:src="${sellingItem.sellingImgs.?[srepimgYn == 'Y'][0].simgUrl}"
+                                 alt="대표 이미지" class="img-fluid" />
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${sellingItem.sitemNm}"></h5>
+                            <p class="card-text" th:text="${sellingItem.sprice}"></p>
+                            <a href="#" th:href="@{/purchase/{id}(id=${sellingItem.sid})}" class="btn btn-secondary buy-button">구매하기</a>
+                        </div>
+                    </a>
                 </div>
             </div>
         </th:block>
     </div>
 
-    <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >
+    <!-- 페이징 -->
+    <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${items.first}?'disabled'">
                 <a th:onclick="'javascript:page(' + ${items.number - 1} + ')'" aria-label='Previous' class="page-link">
                     <span aria-hidden='true'>Previous</span>
                 </a>
             </li>
-
             <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page -1}?'active':''">
                 <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
             </li>
-
             <li class="page-item" th:classappend="${items.last}?'disabled'">
                 <a th:onclick="'javascript:page(' + ${items.number + 1} + ')'" aria-label='Next' class="page-link">
                     <span aria-hidden='true'>Next</span>
