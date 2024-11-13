@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
@@ -132,6 +133,15 @@ public class SellingController {
         return "redirect:/sellings/sellingList"; // 수정 후 판매 목록으로 리다이렉트
     }
 
-
+    @PostMapping("/sellings/delete/{sellingId}")
+    public String deleteSellingItem(@PathVariable Long sellingId, RedirectAttributes redirectAttributes){
+        try {
+            sellingService.deleteItem(sellingId);
+            redirectAttributes.addFlashAttribute("message", "상품이 성공적으로 삭제되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "상품 삭제 중 오류가 발생했습니다.");
+        }
+        return "redirect:/sellings/sellingList"; // 삭제 후 목록 페이지로 리다이렉트
+    }
 
 }

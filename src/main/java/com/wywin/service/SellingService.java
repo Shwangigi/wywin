@@ -98,4 +98,12 @@ public class SellingService {
 
         return sellingItemFormDTO;
     }
+
+    @Transactional
+    public void deleteItem(Long sellingId) {
+        SellingItem sellingItem = sellingRepository.findById(sellingId)
+                .orElseThrow(() -> new EntityNotFoundException("삭제할 상품이 존재하지 않습니다."));
+        sellingRepository.delete(sellingItem); // 상품 삭제
+    }
+
 }
