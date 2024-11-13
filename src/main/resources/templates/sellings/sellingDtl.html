@@ -93,6 +93,33 @@
         }
       });
     }
+
+    function editItem() {
+      var sellingId = [[${item.sid}]];  // 수정할 상품의 sid 값 가져오기
+      window.location.href = '/sellings/edit/' + sellingId;  // 수정 페이지로 이동
+    }
+
+    function deleteItem() {
+      var token = $("meta[name='_csrf']").attr("content");
+      var header = $("meta[name='_csrf_header']").attr("content");
+      var sellingId = [[${item.sid}]];  // 삭제할 상품의 sid 값 가져오기
+
+      if (confirm("정말로 이 상품을 삭제하시겠습니까?")) {
+        $.ajax({
+          url: '/sellings/delete/' + sellingId,  // 삭제할 상품의 URL로 AJAX 요청
+          type: 'POST',
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);  // CSRF 토큰 헤더에 추가
+          },
+          success: function(response) {
+            window.location.href = '/sellings/sellingList';  // 삭제 후 목록으로 리디렉션
+          },
+          error: function() {
+            alert("상품 삭제에 실패했습니다.");
+          }
+        });
+      }
+    }
   </script>
 </th:block>
 
@@ -134,7 +161,14 @@
       <span th:if="${item.itemStatus.name() == 'SELL'}" class="badge badge-primary mgb-15">판매중</span>
       <span th:if="${item.itemStatus.name() != 'SELL'}" class="badge btn-danger mgb-15">품절</span>
 
-      <div class="h4" th:text="${item.sitemNm}"></div>
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 th:text="${item.sitemNm}"></h4>
+
+        <div th:if="${isUploader}">
+          <button type="button" class="btn btn-warning btn-sm" onclick="editItem()">수정하기</button>
+          <button type="button" class="btn btn-danger btn-sm" onclick="deleteItem()">삭제하기</button>
+        </div>
+      </div>
       <hr class="my-4">
 
       <div class="text-right">
