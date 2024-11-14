@@ -80,6 +80,7 @@
     </div>
 
     <form th:action="@{/sellings/sellingList}" method="get" th:object="${itemSearchDto}">
+
         <div class="search-section text-center">
             <div class="form-inline justify-content-center">
                 <select th:field="*{searchDateType}" class="form-control">

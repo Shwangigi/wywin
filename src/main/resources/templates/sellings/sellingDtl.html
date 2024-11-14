@@ -28,9 +28,17 @@
       var token = $("meta[name='_csrf']").attr("content");
       var header = $("meta[name='_csrf_header']").attr("content");
       var url = "/order";
+      var quantity = parseInt($("#count").val());  // 수량 가져오기
+
+      // 최소 주문 수량 확인
+      if (quantity < 1) {
+        alert("최소 주문 수량은 1개입니다.");
+        return;
+      }
+
       var paramData = {
-        itemId : $("#itemId").val(),
-        count : $("#count").val()
+        sellingId: $("#itemId").val(),  // itemId로 전달할 수밖에 없으니 여기서 sid 값 사용
+        cont: quantity  // 'cont'로 수량 전송
       };
       var param = JSON.stringify(paramData);
 

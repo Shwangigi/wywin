@@ -44,7 +44,7 @@ public class Item extends BaseEntity{
         this.itemSellStatus = itemFormDto.getItemSellStatus();
     }
 
-    public void removeStock(int stockNumber){  // exception.OutOfStockException 클래스 활용
+    public void removeStock(int stockNumber){
         int restStock = this.stockNumber - stockNumber;  // 재고 수량에서 주문 후 남은 재고 수량을 구함
 
         if(restStock<0){        // 재고가 주문 수량보다 작을 경우 재고 부족 예외 발생
