@@ -72,4 +72,8 @@ public class SellingItem extends BaseEntity{
         }
         this.stockNumbers = restStock; // 주문 후 남은 재고 수량을 상춤의 현재 재고 값으로 할당
     }
+
+    public void addStock(int stockNumbers){ // 주문을 취소할 경우 주문 수량만큼 재고 증가
+        this.stockNumbers += stockNumbers;
+    }
 }

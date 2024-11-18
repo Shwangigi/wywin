@@ -11,6 +11,6 @@ public interface SellingItemImgRepository extends JpaRepository<SellingItemImg, 
     // 'id' 대신 'sid' 사용
     List<SellingItemImg> findBySellingItem_SidOrderBySidAsc(Long sellingId); // Sid를 기준으로 정렬
 
-    SellingItemImg findBySellingItem_SidAndRepimgYn(Long sellingId, String repimgYn); // 구매이력 페이지에서 주문상품의 대표이미지를 보여줌
+    SellingItemImg findBySellingItem_SidAndSrepimgYn(Long sellingId, String srepimgYn); // 구매이력 페이지에서 주문상품의 대표이미지를 보여줌
 
 }

@@ -35,9 +35,13 @@
           <!-- ADMIN 룰을 가지고 있으면 사용 가능                   -->
           <a class="nav-link" href="">구매 대행</a>
         </li>
-        <li class="nav-item" sec:authorize="isAuthenticated()">
+        <li class="nav-item dropdown" id="dropdownMenu">
           <!-- 로그인 룰을 가지고 있으면 사용 가능                   -->
-          <a class="nav-link" href="/members/myPage">마이페이지</a>
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">마이페이지</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown" id="dropdownItems">
+            <a class="dropdown-item" href="/orders">구매이력</a>
+            <a class="dropdown-item" href="/cart">장바구니</a>
+          </div>
         </li>
         <li class="nav-item" sec:authorize="isAnonymous()" >
           <!-- 로그인 안된 룰을 가지고 있으면 사용 가능                   -->
