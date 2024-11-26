@@ -24,6 +24,28 @@
                 + "&searchBy=" + searchBy
                 + "&searchQuery=" + searchQuery + "&page=" + page;
         }
+
+        $(document).on("click", ".like-btn", function (e) {
+            e.preventDefault();
+            var button = $(this);
+            var itemId = button.data("item-id");
+
+            $.post("/item-like/toggle/" + itemId, function (response) {
+                var icon = button.find("i");
+                if (response.isLiked) {
+                    icon.removeClass("far").addClass("fas"); // 빈 하트를 채운 하트로 변경
+                    button.css("color", "#ff4d4f"); // 채워진 하트 색상
+                    if (response.redirectToWishlist) {
+                        window.location.href = "/wishlist"; // 위시리스트로 이동
+                    }
+                } else {
+                    icon.removeClass("fas").addClass("far"); // 채운 하트를 빈 하트로 변경
+                    button.css("color", "#000000"); // 빈 하트 색상
+                }
+                button.siblings(".like-count").text(response.likeCount); // 좋아요 수 업데이트
+            });
+        });
+
     </script>
 </th:block>
 
@@ -67,8 +89,23 @@
             display: inline-block;
             width: 100%;
         }
+        .like-section .like-btn {
+            font-size: 1.5rem;
+            margin-right: 5px;
+            color: #000000; /* 기본 색상 */
+            transition: color 0.2s ease;
+        }
+
+        .like-section .like-btn .far:hover {
+            color: #ff7875; /* 호버 시 빈 하트 색상 */
+        }
+        .like-section .like-btn .fas {
+            color: #ff4d4f; /* 채워진 하트 색상 */
+        }
+        }
     </style>
 </th:block>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
 <div layout:fragment="content">
     <!-- 판매물품등록 버튼 위치 -->
@@ -118,7 +155,11 @@
                         <div class="card-body">
                             <h5 class="card-title" th:text="${sellingItem.sitemNm}"></h5>
                             <p class="card-text" th:text="${sellingItem.sprice}"></p>
-                            <a th:href="@{/sellings/view/{sellingId}(sellingId=${sellingItem.sid})}" class="btn btn-secondary buy-button">구매하기</a>
+                            <!-- 좋아요 버튼 -->
+                            <button class="like-btn btn" data-item-id="${sellingItem.sid}" style="background: none; border: none;">
+                                <i class="fa-heart" th:classappend="${sellingItem.isLikedByCurrentUser ? 'fas' : 'far'}"></i>
+                            </button>
+                            <span class="like-count" th:text="${sellingItem.likeCount}">0</span>
                         </div>
                     </a>
                 </div>

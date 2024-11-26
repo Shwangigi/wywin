@@ -80,12 +80,15 @@ dependencies {
     // 서로다른 클래스의 값을 필드의 이름과 자료형이 같으면 getter, setter를 통해 값을 복사해서 객체로 변환 해줌)
     implementation 'org.modelmapper:modelmapper:3.1.0'
 
-/*
+   // https://mvnrepository.com/artifact/javax.mail/mail - mail 인증 관련
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
+    implementation 'javax.mail:mail:1.4.7'
 
     // 외부 인증용 카카오, 구글,  네이버 등....
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     // 카카오톡 참고 https://developers.kakao.com/docs/latest/ko/kakaologin/common
-*/
+
+
 
 }
 

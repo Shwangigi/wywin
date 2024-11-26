@@ -1,5 +1,6 @@
 package com.wywin.dto;
 
+import com.wywin.entity.ExchangeRate;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,30 +15,38 @@ public class ExchangeRateDTO {
 
     private BigDecimal usdToKrw;
 
-    private BigDecimal jpyToKrw;
+    private BigDecimal usdToJpy;
 
     private LocalDateTime regTime;  // 생성 시간
 
     private LocalDateTime updateTime;  // 수정 시간
 
     // 생성자
-    public ExchangeRateDTO(Long id, BigDecimal usdToKrw, BigDecimal jpyToKrw, LocalDateTime regTime, LocalDateTime updateTime) {
+    public ExchangeRateDTO(Long id, BigDecimal usdToKrw, BigDecimal usdToJpy, LocalDateTime regTime, LocalDateTime updateTime) {
         this.id = id;
         this.usdToKrw = usdToKrw;
-        this.jpyToKrw = jpyToKrw;
+        this.usdToJpy = usdToJpy;
         this.regTime = regTime;
         this.updateTime = updateTime;
     }
 
     // Entity -> DTO 변환
-    public static ExchangeRateDTO fromEntity(ExchangeRateDTO exchangeRate) {
+    public static ExchangeRateDTO fromEntity(ExchangeRate exchangeRate) {
         return new ExchangeRateDTO(
                 exchangeRate.getId(),
                 exchangeRate.getUsdToKrw(),
-                exchangeRate.getJpyToKrw(),
+                exchangeRate.getUsdToJpy(),
                 exchangeRate.getRegTime(),
                 exchangeRate.getUpdateTime()
         );
+    }
+
+    // DTO -> Entity 변환
+    public ExchangeRate toEntity() {
+        ExchangeRate exchangeRate = new ExchangeRate();
+        exchangeRate.setUsdToKrw(this.usdToKrw);
+        exchangeRate.setUsdToJpy(this.usdToJpy);
+        return exchangeRate;
     }
 
 }

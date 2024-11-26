@@ -121,7 +121,7 @@
     <div th:if="${#strings.isEmpty(sellingItemFormDTO.sid)}" style="text-align: center">
       <button th:formaction="@{/sellings/new}" type="submit" class="btn btn-primary">저장</button>
     </div>
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    <!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
 
   </form>
 

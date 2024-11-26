@@ -50,7 +50,7 @@ public class SellingService {
 
     @Transactional(readOnly = true)
     public SellingItemFormDTO getItemDtl(Long itemId) {
-        SellingItem item = sellingRepository.findById(itemId)
+        SellingItem sellingItem = sellingRepository.findById(itemId)
                 .orElseThrow(EntityNotFoundException::new);
 
         List<SellingItemImg> itemImgList = sellingItemImgRepository.findBySellingItem_SidOrderBySidAsc(itemId);
@@ -58,9 +58,9 @@ public class SellingService {
                 .map(SellingItemImgDTO::of)
                 .collect(Collectors.toList());
 
-        SellingItemFormDTO itemFormDto = SellingItemFormDTO.of(item);
-        itemFormDto.setItemImgDtoList(itemImgDtoList);
-        return itemFormDto;
+        SellingItemFormDTO sellingItemFormDTO = SellingItemFormDTO.of(sellingItem);
+        sellingItemFormDTO.setItemImgDtoList(itemImgDtoList);
+        return sellingItemFormDTO;
     }
 
     public Long updateItem(SellingItemFormDTO sellingItemFormDTO, List<MultipartFile> itemImgFileList) throws Exception {

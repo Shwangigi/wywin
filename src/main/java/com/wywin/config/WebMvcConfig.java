@@ -26,8 +26,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry){
+        // 웹 브라우져에 입력하는 url에 /images로 시작하는 경우 로컬 컴퓨터에 저장된 파일 읽어올 경로
         // service.FileService에 파일 처리용 클래스 생성
-        registry.addResourceHandler("/images/**")   // 웹 브라우져에 입력하는 url에 /images로 시작하는 경우 uploadPath에 설정한 폴더를 기준으로 파일을 읽어오도록 설정
-                .addResourceLocations(uploadPath);  // 로컬 컴퓨터에 저장된 파일을 읽어올 root 경로 설정
+        registry.addResourceHandler("/images/**")
+                /*웹 브라우저에 입력하는 url에 /images로 시작하는 경우 uploadPath에 설정한 폴더를 기준으로 파일을 읽어오도록 설정*/
+                .addResourceLocations(uploadPath);/*로컬 컴퓨터에 지장된 파일을 읽어올  root 경로를 설정*/
+
+        // css 파일 경로 추가
+        registry.addResourceHandler("/css/**")
+                .addResourceLocations("classpath:/static/css/");
     }
 }

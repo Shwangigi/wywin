@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout=http://www.ultraq.net.nz/thymeleaf/layout>
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <title>Title</title>
 
   <!-- CSS only , 부트 스트랩 사용, 내서버에 css 활용 -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -21,21 +21,21 @@
 </head>
 <body>
 
-  <div th:replace="~{fragments/header::header}"></div>
+<div th:replace="~{fragments/header::header}"></div>
 
 
 
-  <div class="container">
-    <div class="row">
-      <div th:replace="~{fragments/sidebar :: sidebarFragment}"></div>
-      <div layout:fragment="content" class="content" >
+<div class="container">
+  <div class="row">
+    <div th:replace="~{fragments/sidebar :: sidebarFragment}"></div>
+    <div layout:fragment="content" class="content" >
 
-      </div>
     </div>
   </div>
+</div>
 
 
-  <div th:replace="~{fragments/footer::footer}"></div>
+<div th:replace="~{fragments/footer::footer}"></div>
 
 </body>
 </html>

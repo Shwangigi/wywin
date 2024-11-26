@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wywin.constant.ItemStatus;
 import com.wywin.dto.ItemSearchDTO;
+import com.wywin.entity.Item;
 import com.wywin.entity.QSellingItem;
 import com.wywin.entity.SellingItem;
 import jakarta.persistence.EntityManager;

@@ -4,6 +4,7 @@ import com.wywin.dto.ItemSearchDTO;
 import com.wywin.dto.SellingItemDTO;
 import com.wywin.dto.SellingItemFormDTO;
 import com.wywin.entity.SellingItem;
+import com.wywin.service.ItemLikeService;
 import com.wywin.service.SellingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,8 @@ import java.util.Optional;
 public class SellingController {
 
     private final SellingService sellingService;
+
+    private final ItemLikeService itemLikeService;
 
 
     // 판매 등록 폼 이동
@@ -73,6 +76,13 @@ public class SellingController {
         // 페이지 파라미터가 없으면 0번 페이지를 보임. 한 페이지당 3개의 상품만 보여줌.
         Page<SellingItem> items = sellingService.getSellingItemPage(itemSearchDto, pageable);  // 조회 조건, 페이징 정보를 파라미터로 넘겨서 Page 타입으로 받음
         // 조회 조건과 페이징 정보를 파라미터로 넘겨서 item 객체 받음
+
+        // 각 아이템에 대해 좋아요 수를 추가
+        for (SellingItem item : items) {
+            Long likeCount = itemLikeService.getLikeCount(item.getSid());  // 아이템의 좋아요 수 조회
+            item.setLikeCount(likeCount); // 아이템에 좋아요 수 설정
+        }
+
         model.addAttribute("items", items); // 조회한 상품 데이터 및 페이징정보를 뷰로 전달
         model.addAttribute("itemSearchDto", itemSearchDto); // 페이지 전환시 기존 검색 조건을 유지
         model.addAttribute("maxPage", 5);   // 상품관리 메뉴 하단에 보여줄 페이지 번호의 최대 개수 5
