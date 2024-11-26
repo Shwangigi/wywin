@@ -1,6 +1,6 @@
 package com.wywin.dto;
 
-import com.wywin.constrant.ItemStatus;
+import com.wywin.constant.ItemStatus;
 import lombok.Getter;
 import lombok.Setter;
 

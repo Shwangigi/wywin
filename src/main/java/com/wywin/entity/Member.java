@@ -1,6 +1,6 @@
 package com.wywin.entity;
 
-import com.wywin.constrant.Role;
+import com.wywin.constant.Role;
 import com.wywin.dto.MemberDTO;
 import jakarta.persistence.*;
 import lombok.*;

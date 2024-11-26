@@ -1,11 +1,9 @@
 package com.wywin.entity;
 
-import com.wywin.constrant.ItemStatus;
+import com.wywin.constant.ItemStatus;
 import com.wywin.dto.SellingItemFormDTO;
 import com.wywin.exception.OutOfStockException;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

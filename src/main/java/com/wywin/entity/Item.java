@@ -1,10 +1,8 @@
 package com.wywin.entity;
 
-import com.wywin.constrant.ItemStatus;
+import com.wywin.constant.ItemStatus;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name="item")
