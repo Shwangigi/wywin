@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/guides")
 public class GuideRestController {
 
-    private CalculatorService calculatorService ;
+    private  CalculatorService calculatorService ;
 
     @Autowired
     public GuideRestController(CalculatorService calculatorService) {
@@ -41,4 +41,6 @@ public class GuideRestController {
         // 서비스 계층의 메소드를 호출하여 실제 운송비용을 계산
         return calculatorService.calculateCost(distance, weight, volume, ratePerKg, volumetricFactor, fixedFee);
     }
+
+
 }

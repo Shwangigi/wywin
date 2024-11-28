@@ -1,6 +1,5 @@
 package com.wywin.service;
 
-
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService{ // 이메일 전송하고 인증번호 생성하는 서비스
+public class EmailServiceImpl implements EmailService { // 이메일 전송하고 인증번호 생성하는 서비스
 
     private final JavaMailSender mailSender; // 이메일 전송을 위한 객체
 
@@ -100,4 +99,6 @@ public class EmailServiceImpl implements EmailService{ // 이메일 전송하고
         }
         return ePw;
     }
+
+
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ㅂㅇ<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}">
@@ -118,9 +118,9 @@
         $.ajax({
           url: '/sellings/delete/' + sellingId,  // 삭제할 상품의 URL로 AJAX 요청
           type: 'POST',
-         /* beforeSend: function(xhr) {
-            xhr.setRequestHeader(header, token);  // CSRF 토큰 헤더에 추가
-          },*/
+          /* beforeSend: function(xhr) {
+             xhr.setRequestHeader(header, token);  // CSRF 토큰 헤더에 추가
+           },*/
           success: function(response) {
             window.location.href = '/sellings/sellingList';  // 삭제 후 목록으로 리디렉션
           },

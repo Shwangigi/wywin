@@ -22,15 +22,6 @@ public class CommentService {
 
 
     public  CommentDTO saveComment(CommentDTO commentDTO){
-        // DTO -> Entity 변환
-       /* Comment comment = new Comment();
-        comment.setItemId(comment.getItemId());
-        comment.setItemNm(commentDTO.getItemNm());
-        comment.setPrice(commentDTO.getPrice());
-        comment.setContent(commentDTO.getContent());
-        comment.setImageUrl(commentDTO.getImageUrl());
-        comment.setCreatedAt(LocalDateTime.now());
-        comment.setWriter(comment.getWriter());*/
 
         Comment comment = commentDTO.toEntity();
 

@@ -5,7 +5,6 @@ import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wywin.constant.ItemStatus;
 import com.wywin.dto.ItemSearchDTO;
-import com.wywin.entity.Item;
 import com.wywin.entity.QSellingItem;
 import com.wywin.entity.SellingItem;
 import jakarta.persistence.EntityManager;
@@ -32,9 +31,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         // null이 아니라 판매중, 품절 상태라면 해당 조건의 상품만 조회
     }
 
-
     // 날짜 조건 검색
-      private BooleanExpression regDtsAfter(String searchDateType){   // 해당 시간 이후로 등록된 상품만 검색
+    private BooleanExpression regDtsAfter(String searchDateType){   // 해당 시간 이후로 등록된 상품만 검색
 
         LocalDateTime dateTime = LocalDateTime.now();
 
@@ -51,8 +49,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
             dateTime = dateTime.minusMonths(6);
         }
 
-          return QSellingItem.sellingItem.regTime.after(dateTime);
-      }
+        return QSellingItem.sellingItem.regTime.after(dateTime);
+    }
 
     // 상품명, 등록자 id 검색
     private BooleanExpression searchByLike(String searchBy, String searchQuery){
@@ -89,5 +87,4 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
 
         return new PageImpl<>(content, pageable, total);            // 페이징 처리되어 간다.
     }
-
 }

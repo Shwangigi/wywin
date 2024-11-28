@@ -19,7 +19,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
             "where ci.cart.id = :cartId " +
             "and im.srepimgYn = 'Y' " +
             "order by ci.regTime desc")
-      // 생성자를 이용하여 DTO를 반환할 때는 new 키워드와 해당 DTO의 패키지, 클래스명을 적음
+        // 생성자를 이용하여 DTO를 반환할 때는 new 키워드와 해당 DTO의 패키지, 클래스명을 적음
     List<CartDetailDTO> findCartDetailDTOList(Long cartId);
     // 장바구니 페이지에 전달할 리스트를 쿼리문
 }

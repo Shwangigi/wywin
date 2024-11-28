@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,17 +50,18 @@ public class SellingService {
     }
 
     @Transactional(readOnly = true)
-    public SellingItemFormDTO getItemDtl(Long itemId) {
-        SellingItem sellingItem = sellingRepository.findById(itemId)
-                .orElseThrow(EntityNotFoundException::new);
+    public SellingItemFormDTO getItemDtl(Long sellingId) {
+        List<SellingItemImg> itemImgList = sellingItemImgRepository.findBySellingItem_SidOrderBySidAsc(sellingId);
+        List<SellingItemImgDTO> itemImgDTOList = new ArrayList<>();
+        for (SellingItemImg sellingItemImg : itemImgList){
+            SellingItemImgDTO sellingItemImgDTO = SellingItemImgDTO.of(sellingItemImg);
+            itemImgDTOList.add(sellingItemImgDTO);
+        }
 
-        List<SellingItemImg> itemImgList = sellingItemImgRepository.findBySellingItem_SidOrderBySidAsc(itemId);
-        List<SellingItemImgDTO> itemImgDtoList = itemImgList.stream()
-                .map(SellingItemImgDTO::of)
-                .collect(Collectors.toList());
-
+        SellingItem sellingItem = sellingRepository.findById(sellingId).orElseThrow(EntityNotFoundException::new);
         SellingItemFormDTO sellingItemFormDTO = SellingItemFormDTO.of(sellingItem);
-        sellingItemFormDTO.setItemImgDtoList(itemImgDtoList);
+        sellingItemFormDTO.setItemImgDtoList(itemImgDTOList);
+
         return sellingItemFormDTO;
     }
 
@@ -72,12 +74,11 @@ public class SellingService {
         List<Long> itemImgIds = sellingItemFormDTO.getItemImgIds();
 
         for (int i = 0; i < itemImgFileList.size(); i++) {
-            if (i < itemImgIds.size() && itemImgFileList.get(i) != null && !itemImgFileList.get(i).isEmpty()) {
-                sellingItemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(i));
-            }
+            sellingItemImgService.updateItemImg(itemImgIds.get(i),
+            itemImgFileList.get(i));
         }
 
-        return sellingItemFormDTO.getSid();
+        return sellingItem.getSid();
     }
 
     public SellingItem getSellingItem(Long sellingId) {

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,30 +38,15 @@ public class SellingItemFormDTO { // 프론트에서 넘어오는 객체 처리�
 
     private List<Long> itemImgIds = new ArrayList<>();  // 상품의 이미지 아이디를 저장하는 리스트.
 
+    private static ModelMapper modelMapper = new ModelMapper();
 
     // 엔티티 객체 생성 메서드
     public SellingItem createItem() {
-        SellingItem item = new SellingItem();
-        item.setSid(this.sid);
-        item.setSitemNm(this.sitemNm);  // 엔티티에서 해당 필드명을 맞추세요.
-        item.setSprice(this.sprice);
-        item.setItemDetail(this.itemDetail);
-        item.setStockNumbers(this.stockNumbers);
-        item.setSeller(this.seller);
-        item.setItemStatus(this.itemStatus);
-        return item;
+        return modelMapper.map(this, SellingItem.class);
     }
 
     // 엔티티 -> DTO 변환 메서드
     public static SellingItemFormDTO of(SellingItem sellingItem) {
-        SellingItemFormDTO dto = new SellingItemFormDTO();
-        dto.setSid(sellingItem.getSid());
-        dto.setSitemNm(sellingItem.getSitemNm());  // 필드명을 DTO와 맞추세요.
-        dto.setSprice(sellingItem.getSprice());
-        dto.setItemDetail(sellingItem.getItemDetail());
-        dto.setStockNumbers(sellingItem.getStockNumbers());
-        dto.setSeller(sellingItem.getSeller());
-        dto.setItemStatus(sellingItem.getItemStatus());
-        return dto;
+        return modelMapper.map(sellingItem, SellingItemFormDTO.class);
     }
 }

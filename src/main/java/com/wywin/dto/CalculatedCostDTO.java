@@ -1,7 +1,8 @@
 package com.wywin.dto;
 
-public class CalculatedCostDTO {
 
+
+public class CalculatedCostDTO {
     private double distance;  // 운송 거리
     private double weight;    // 화물 무게
     private double volume;    // 화물 부피

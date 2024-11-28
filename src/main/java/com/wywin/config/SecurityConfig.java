@@ -48,7 +48,7 @@ public class SecurityConfig {
             // requestMatchers : 특정 요청과 일치하는지 url에 대한 엑세스 설정
         });
 
-        http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
+        http.csrf(httpSecurityCsrfConfigurer ->  httpSecurityCsrfConfigurer.disable() );
 
         http.exceptionHandling(exceptionHandling -> {
             exceptionHandling
@@ -58,5 +58,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-}
 
+
+}

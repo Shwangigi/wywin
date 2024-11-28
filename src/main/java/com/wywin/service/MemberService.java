@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 @Service
 @RequiredArgsConstructor
@@ -71,7 +72,7 @@ public class MemberService implements UserDetailsService {
         Member member = memberRepository.findByEmail(memberUpdateDTO.getEmail());
         member.updateMemberNickName(memberUpdateDTO.getNickName());
         member.updatePhoneNum(memberUpdateDTO.getPhoneNum());
-        member.updateAddress(memberUpdateDTO.getAddress());
+        /*member.updateAddress(memberUpdateDTO.getZipcode(), memberUpdateDTO.getAddress1(), memberUpdateDTO.getAddress2(), memberUpdateDTO.getExtraAddress());*/
 
         memberRepository.save(member);
         log.info(member);
@@ -90,4 +91,20 @@ public class MemberService implements UserDetailsService {
 
         memberRepository.save(member);
     }
+
+    public boolean deleteID(String email, String password) {
+        Member member = memberRepository.findByEmail(email);
+        if(passwordEncoder.matches(password, member.getPassword())) {
+            memberRepository.delete(member);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // 회원 조회 (로그인된 회원을 가정)
+    public Member findMemberById(Long id) {
+        return memberRepository.findById(id).orElseThrow(() -> new RuntimeException("Member not found"));
+    }
+
 }

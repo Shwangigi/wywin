@@ -52,30 +52,30 @@ public class OrderService {
     @Transactional(readOnly = true)
     public Page<OrderHistDTO> getOrderList(String email, Pageable pageable){
         // 주문 목록을 조회
-    List<Order> orders = orderRepository.findOrders(email, pageable);
-    Long totalCount = orderRepository.countOrder(email);
+        List<Order> orders = orderRepository.findOrders(email, pageable);
+        Long totalCount = orderRepository.countOrder(email);
 
-    List<OrderHistDTO> orderHistDTOS = new ArrayList<>();
+        List<OrderHistDTO> orderHistDTOS = new ArrayList<>();
 
-    for(Order order : orders){
-        OrderHistDTO orderHistDTO = new OrderHistDTO(order);
-        List<OrderItem> orderItems = order.getOrderItems();
-        for (OrderItem orderItem : orderItems){
-            SellingItemImg sellingItemImg = sellingItemImgRepository.findBySellingItem_SidAndSrepimgYn(orderItem.getSellingItem().getSid(), "Y");
-            OrderItemDTO orderItemDTO = new OrderItemDTO(orderItem, sellingItemImg.getSimgUrl());
-            orderHistDTO.addOrderItemDTO(orderItemDTO);
+        for(Order order : orders){
+            OrderHistDTO orderHistDTO = new OrderHistDTO(order);
+            List<OrderItem> orderItems = order.getOrderItems();
+            for (OrderItem orderItem : orderItems){
+                SellingItemImg sellingItemImg = sellingItemImgRepository.findBySellingItem_SidAndSrepimgYn(orderItem.getSellingItem().getSid(), "Y");
+                OrderItemDTO orderItemDTO = new OrderItemDTO(orderItem, sellingItemImg.getSimgUrl());
+                orderHistDTO.addOrderItemDTO(orderItemDTO);
+            }
+            orderHistDTOS.add(orderHistDTO);
         }
-        orderHistDTOS.add(orderHistDTO);
+        return new PageImpl<OrderHistDTO>(orderHistDTOS, pageable, totalCount);
     }
-    return new PageImpl<OrderHistDTO>(orderHistDTOS, pageable, totalCount);
-    }
-    
+
     @Transactional(readOnly = true) // 주문 취소하는 로직
     public boolean validateOrder(Long orderId, String email){
         Member curMember = memberRepository.findByEmail(email);
         Order order = orderRepository.findById(orderId).orElseThrow(EntityExistsException::new);
         Member saveMember = order.getMember();
-        
+
         if (!StringUtils.equals(curMember.getEmail(), saveMember.getEmail())){
             return false;
         }

@@ -3,6 +3,9 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}">
 
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
@@ -33,14 +36,12 @@
                     $(images[currentImageIndex]).addClass("active"); // 이전 이미지 표시
                 }
             });
-        });
 
             // 대행 등록 버튼 클릭 시 모달창 표시
             $("#openModalBtn").click(function () {
-                // itemId 값을 modal의 hidden input 필드에 전달
                 var itemId = $("#itemId").val();
                 document.getElementById("itemId").value = itemId;
-                $("#registerModal").modal("show"); // 모달 열기
+                $('#registerModal').modal('show'); // Bootstrap 5 방식으로 모달 열기
             });
 
             // 대행 등록 버튼 클릭 시 입력한 내용 화면에 표시 및 서버로 전송
@@ -49,7 +50,7 @@
                     itemNm: $("#itemNameInput").val(),
                     price: $("#priceInput").val(),
                     content: $("#contentInput").val(),
-                    itemId: $("#itemId").val(), // itemId 추가
+                    itemId: $("#itemId").val(),
                     createdAt: new Date().toISOString()
                 };
 
@@ -59,19 +60,17 @@
                     contentType: "application/json",
                     data: JSON.stringify(commentDTO),
                     success: function (response) {
-                        // 서버에서 저장한 데이터를 화면에 표시
                         var newContent = `
-                            <div class="registered-item">
-                                <h5>상품명: ${response.itemNm}</h5>
-                                <p>가격: ${response.price}</p>
-                                <p>내용: ${response.content}</p>
-                                <p>작성일: ${response.createdAt}</p>
-                            </div>
-                        `;
+                        <div class="registered-item">
+                            <h5>상품명: ${response.itemNm}</h5>
+                            <p>가격: ${response.price}</p>
+                            <p>내용: ${response.content}</p>
+                            <p>작성일: ${response.createdAt}</p>
+                        </div>
+                    `;
                         $("#registeredContent").append(newContent);
-                        $("#registerModal").modal("hide"); // 모달 창 닫기
+                        $('#registerModal').modal('hide'); // 모달 창 닫기
                         $("#delegateForm")[0].reset(); // 입력 필드 초기화
-
                         location.reload();
                     },
                     error: function (err) {
@@ -81,7 +80,6 @@
                 });
             });
         });
-
     </script>
 </th:block>
 
@@ -140,8 +138,7 @@
     </style>
 </th:block>
 
-<!-- Bootstrap JS 추가 -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <div layout:fragment="content" style="margin-left:25%; margin-right:25%">
 

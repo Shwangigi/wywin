@@ -16,7 +16,6 @@ import java.util.UUID;
 
 @Service
 public class AuctionImgService {
-
     // 컨트롤러의 책임을 줄이고, 이미지 저장 로직이 독립적으로 관리되어 코드의 가독성과 유지보수성이 높아지도록 서비스 구현
 
     private final String directoryPath = "C:\\wywin\\auctionItem"; // 파일 저장 경로
@@ -73,4 +72,5 @@ public class AuctionImgService {
             deleteImage(img); // 각각의 이미지를 삭제
         }
     }
+
 }

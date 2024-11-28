@@ -1,7 +1,10 @@
 package com.wywin.dto;
 
 import com.wywin.constant.ItemStatus;
+import com.wywin.entity.Item;
+import com.wywin.entity.Member;
 import com.wywin.entity.SellingItem;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
@@ -42,7 +45,7 @@ public class SellingItemDTO {
     // 상품을 등록할 때 화면으로 부터 전달 받은 DTO 객체를 엔티티로 변환하는 작업 대체(DTOtoEntity, EntityToDTO)
     // 서로다른 클래스의 값을 필드의 이름과 자료형이 같으면 getter, setter를 통해 값을 복사해서 객체로 변환 해줌)
     //    implementation 'org.modelmapper:modelmapper:3.1.0'
-    private static ModelMapper modelMapper = new ModelMapper();
+   /* private static ModelMapper modelMapper = new ModelMapper();
 
     public SellingItem createItem(){   // 엔티티 객체와 DTO 객체 간의 데이터를 복사하여 반환해주는 메서드
         return modelMapper.map(this, SellingItem.class);
@@ -50,6 +53,6 @@ public class SellingItemDTO {
 
     public static SellingItemFormDTO of(SellingItem sellingItem){    // 엔티티 객체와 DTO 객체 간의 데이터를 복사하여 반환해주는 메서드
         return modelMapper.map(sellingItem, SellingItemFormDTO.class);
-    }
+    }*/
 
 }

@@ -48,8 +48,8 @@
 
     // 상품 수량 변경시 장바구니에 담긴 상품 수량 업데이트
     function updateCartItemCount(cartItemId, count){
-     /* var token = $("meta[name='_csrf']").attr("content");
-      var header = $("meta[name='_csrf_header']").attr("content");*/
+      /* var token = $("meta[name='_csrf']").attr("content");
+       var header = $("meta[name='_csrf_header']").attr("content");*/
 
       var url = "/cartItem/" + cartItemId+"?count=" + count;
 
@@ -81,8 +81,8 @@
     // x 버튼 클릭시 장바구니에 담긴 상품 삭제 357 추가
     function deleteCartItem(obj){
       var cartItemId = obj.dataset.id;
-     /* var token = $("meta[name='_csrf']").attr("content");
-      var header = $("meta[name='_csrf_header']").attr("content");*/
+      /* var token = $("meta[name='_csrf']").attr("content");
+       var header = $("meta[name='_csrf_header']").attr("content");*/
 
       var url = "/cartItem/" + cartItemId;
 
@@ -111,7 +111,7 @@
       });
     }
 
-
+    // 장바구니 상품 주문하기 363 추가
     function orders(){
       /*var token = $("meta[name='_csrf']").attr("content");
       var header = $("meta[name='_csrf_header']").attr("content");*/
@@ -168,8 +168,9 @@
 <th:block layout:fragment="css">
   <style>
     .content-mg{
-      margin-left:25%;
-      margin-right:25%;
+      width: 100%;
+      margin-left:10%;
+      margin-right:10%;
       margin-top:2%;
       margin-bottom:100px;
     }

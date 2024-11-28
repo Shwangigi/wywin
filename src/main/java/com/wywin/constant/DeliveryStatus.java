@@ -6,5 +6,5 @@ public enum DeliveryStatus {
     SHIPPED,    // 배송 중
     DELIVERED,  // 배송 완료
     CANCELED,   // 배송 취소
-    DELAY       // 배송지연    
+    DELAY       // 배송지연
 }

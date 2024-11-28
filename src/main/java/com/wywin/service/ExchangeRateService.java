@@ -1,6 +1,7 @@
 package com.wywin.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wywin.constant.CurrencyType;
 import com.wywin.dto.AuctionItemDTO;
 import com.wywin.dto.ExchangeRateDTO;
 import com.wywin.dto.ExchangeRateResponseDTO;
@@ -34,7 +35,7 @@ public class ExchangeRateService {
     private String apiUrl;
 
     // 매일 정해진 시간에 환율 정보를 api를 통해 받아와 데이터베이스에 저장
-    @Scheduled(cron = "0 55 11 * * *")
+    @Scheduled(cron = "0 55 12 * * *")
     @Transactional  // 트랜잭션을 적용하여 DB에 저장이 제대로 이루어지도록 보장
     public void updateExchangeRatesFromApi() {
         System.out.println("Scheduled task started at " + LocalDateTime.now());
@@ -94,50 +95,95 @@ public class ExchangeRateService {
     public ExchangeRateDTO getLatestExchangeRateDTO() {
         // 데이터베이스에서 가장 최근의 환율 정보를 가져옴
         ExchangeRate latestExchangeRate = exchangeRateRepository.findTopByOrderByRegTimeDesc();
-        return ExchangeRateDTO.fromEntity(latestExchangeRate);  // Entity -> DTO 변환 후 반환
+        if (latestExchangeRate == null) {
+            System.out.println("No exchange rate found in the database.");
+            return null;
+        }
+        ExchangeRateDTO exchangeRateDTO = ExchangeRateDTO.fromEntity(latestExchangeRate);
+        System.out.println("Loaded exchange rates: USD to KRW = " + exchangeRateDTO.getUsdToKrw() +
+                ", USD to JPY = " + exchangeRateDTO.getUsdToJpy());
+        return exchangeRateDTO;
     }
 
-    // 상품 상세 페이지에서 호출되는 메소드
-    // 입찰 상품을 DTO에서 엔티티로 변환하여 환율 계산 메서드
-    public BigDecimal calculateEstimatedPrice(AuctionItem auctionItem) {
-
+    // 입찰 상품 환율 계산 메서드
+    public Integer calculateEstimatedPrice(AuctionItem auctionItem) {
         // 최신 환율 정보 가져오기
         ExchangeRateDTO exchangeRateDTO = getLatestExchangeRateDTO();
 
         if (auctionItem == null || exchangeRateDTO == null) {
-            return BigDecimal.ZERO;
+            System.out.println("No auction item or exchange rate info found.");
+            return 0;  // 경매 아이템이나 환율 정보가 없으면 0 반환
         }
 
-        // 상품 가격이 달러일 때 (USD -> KRW 변환)
-        if ("USD".equals(auctionItem.getCurrencyType())) {
-            BigDecimal finalPrice = new BigDecimal(auctionItem.getFinalPrice());  // 상품의 최종 가격 (USD)
+        Integer finalPrice = auctionItem.getFinalPrice();  // 최종 낙찰가
+        if (finalPrice == null || finalPrice == 0) {
+            System.out.println("Final price is invalid: " + finalPrice);
+            return 0;  // finalPrice가 없거나 0이면 0 반환
+        }
+
+        System.out.println("Final price (USD): " + finalPrice);  // 최종 가격 출력
+
+        // 상품 가격이 USD일 때 (USD -> KRW 변환)
+        if (auctionItem.getCurrencyType() == CurrencyType.USD) {
             BigDecimal usdToKrw = exchangeRateDTO.getUsdToKrw();  // USD -> KRW 환율
-            BigDecimal estimatedPrice = finalPrice.multiply(usdToKrw);  // 150 * 1300 = 195000 KRW
+            if (usdToKrw == null) {
+                System.out.println("USD to KRW exchange rate is null.");
+                return 0;  // 환율 정보가 없으면 0 반환
+            }
 
-            // 소수점 없이 1원 단위로 올림 처리
-            estimatedPrice = estimatedPrice.setScale(0, RoundingMode.CEILING);  // 1원 단위로 올림 처리
+            System.out.println("USD to KRW exchange rate: " + usdToKrw);  // 환율 값 출력
 
-            return estimatedPrice;
+            // 환율 계산: finalPrice * usdToKrw
+            BigDecimal estimatedPrice = new BigDecimal(finalPrice).multiply(usdToKrw);
+            System.out.println("USD to KRW conversion: " + finalPrice + " * " + usdToKrw + " = " + estimatedPrice);
+
+            // 소수점 없이 1원 단위로 올림 처리 후 Integer로 변환하여 반환
+            return estimatedPrice.setScale(0, RoundingMode.CEILING).intValue();
         }
 
-        // 상품 가격이 엔화일 때 (JPY -> USD -> KRW 간접 변환)
-        else if ("JPY".equals(auctionItem.getCurrencyType())) {
-            BigDecimal finalPrice = new BigDecimal(auctionItem.getFinalPrice()); // 상품의 최종 가격 (JPY)
+
+        // 상품 가격이 JPY일 때 (JPY -> USD -> KRW 변환)
+        else if (auctionItem.getCurrencyType() == CurrencyType.JPY) {
             BigDecimal usdToKrw = exchangeRateDTO.getUsdToKrw();  // USD -> KRW 환율
             BigDecimal usdToJpy = exchangeRateDTO.getUsdToJpy();  // USD -> JPY 환율
 
-            // 엔을 USD로 변환한 후 KRW로 변환
-            BigDecimal estimatedPrice = finalPrice.multiply(usdToKrw)
-                    .divide(usdToJpy, 2, RoundingMode.HALF_UP);  // (1800 * 1300) / 110 = 21,272.73 KRW
+            if (usdToKrw == null || usdToJpy == null) {
+                System.out.println("USD to KRW or USD to JPY exchange rate is null.");
+                return 0;  // 환율 정보가 없으면 0 반환
+            }
 
-            // 소수점 없이 1원 단위로 올림 처리
-            estimatedPrice = estimatedPrice.setScale(0, RoundingMode.CEILING);  // 1원 단위로 올림 처리
+            System.out.println("USD to KRW exchange rate: " + usdToKrw);  // 환율 값 출력
+            System.out.println("USD to JPY exchange rate: " + usdToJpy);  // 환율 값 출력
 
-            return estimatedPrice;
+            // 환율 계산: JPY -> USD -> KRW
+            BigDecimal estimatedPrice = new BigDecimal(finalPrice).multiply(usdToKrw).divide(usdToJpy, 2, RoundingMode.HALF_UP);
+            System.out.println("JPY to USD to KRW conversion: " + finalPrice + " * " + usdToKrw + " / " + usdToJpy + " = " + estimatedPrice);
+
+            // 소수점 없이 1원 단위로 올림 처리 후 Integer로 변환하여 반환
+            return estimatedPrice.setScale(0, RoundingMode.CEILING).intValue();
         }
 
-        // 기본 환율이 아닌 경우
-        return BigDecimal.ZERO;
+        // USD와 JPY가 아닌 경우, finalPrice 그대로 반환
+        System.out.println("Currency type is neither USD nor JPY. Using final price directly.");
+        return finalPrice;
     }
+
+    // 보증금(엔화와 달러일 때) 원화로 계산
+    public Integer convertToKRW(Integer amount, CurrencyType currencyType, ExchangeRateDTO exchangeRateDTO) {
+        switch (currencyType) {
+            case USD:
+                return new BigDecimal(amount).multiply(exchangeRateDTO.getUsdToKrw())
+                        .setScale(0, RoundingMode.CEILING).intValue();
+            case JPY:
+                return new BigDecimal(amount).multiply(exchangeRateDTO.getUsdToKrw())
+                        .divide(exchangeRateDTO.getUsdToJpy(), 2, RoundingMode.HALF_UP)
+                        .setScale(0, RoundingMode.CEILING).intValue();
+            case KRW:
+            default:
+                return amount; // 원화는 변환 불필요
+        }
+    }
+
+
 
 }
